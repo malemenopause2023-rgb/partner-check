@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>彼のテストステロン、大丈夫？｜パートナーチェック</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf6f2;
+    --card: #ffffff;
+    --main: #c9806b;
+    --main-dark: #a8624f;
+    --sub: #f3e6df;
+    --text: #4a3f3a;
+    --muted: #9a8b84;
+    --line: #eadfd8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 480px; margin: 0 auto; padding: 24px 16px 48px; }
+  .card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 28px 22px;
+    box-shadow: 0 4px 20px rgba(160, 110, 90, 0.08);
+  }
+  .screen { display: none; animation: fade .35s ease; }
+  .screen.active { display: block; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .label { font-size: 12px; letter-spacing: .15em; color: var(--main); font-weight: 700; text-align: center; }
+  h1 { font-size: 23px; text-align: center; margin: 10px 0 16px; line-height: 1.5; }
+  h2 { font-size: 17px; margin-bottom: 14px; }
+  .lead { font-size: 14px; color: var(--muted); text-align: center; margin-bottom: 24px; }
+  .deco { font-size: 44px; text-align: center; margin: 4px 0; }
+
+  .btn {
+    display: block; width: 100%;
+    padding: 15px; border: none; border-radius: 999px;
+    background: var(--main); color: #fff;
+    font-family: inherit; font-size: 16px; font-weight: 700;
+    cursor: pointer; transition: background .2s;
+  }
+  .btn:hover { background: var(--main-dark); }
+  .btn:disabled { background: #d9ccc6; cursor: default; }
+
+  .field { margin-bottom: 26px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    padding: 10px 14px; border-radius: 999px;
+    border: 1.5px solid var(--line); background: #fff;
+    font-family: inherit; font-size: 14px; color: var(--text);
+    cursor: pointer; transition: all .15s;
+  }
+  .chip.selected { background: var(--main); border-color: var(--main); color: #fff; }
+
+  .love-scale { display: flex; justify-content: space-between; gap: 6px; }
+  .love-scale .chip { flex: 1; padding: 10px 2px; font-size: 12px; text-align: center; border-radius: 14px; }
+  .love-scale .chip span { display: block; font-size: 18px; margin-bottom: 2px; }
+
+  .progress { height: 6px; background: var(--sub); border-radius: 999px; overflow: hidden; margin-bottom: 8px; }
+  .progress-bar { height: 100%; background: var(--main); width: 0; transition: width .3s; }
+  .progress-text { font-size: 12px; color: var(--muted); text-align: right; margin-bottom: 18px; }
+
+  .q-num { font-size: 13px; color: var(--main); font-weight: 700; }
+  .q-text { font-size: 19px; font-weight: 700; margin: 8px 0 30px; min-height: 64px; }
+  .answers { display: flex; gap: 12px; }
+  .answers .btn { flex: 1; }
+  .btn-ghost { background: #fff; color: var(--main); border: 2px solid var(--main); }
+  .btn-ghost:hover { background: var(--sub); }
+  .back { background: none; border: none; color: var(--muted); font-family: inherit; font-size: 13px; margin-top: 18px; cursor: pointer; }
+
+  .result-icon { font-size: 52px; text-align: center; }
+  .result-title { font-size: 20px; font-weight: 700; text-align: center; margin: 12px 0 8px; line-height: 1.6; }
+  .result-count { text-align: center; font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+  .result-count b { color: var(--main); font-size: 22px; }
+  .checked-list { background: var(--sub); border-radius: 14px; padding: 16px 18px; margin-bottom: 20px; font-size: 14px; }
+  .checked-list p { font-weight: 700; margin-bottom: 6px; }
+  .checked-list li { margin-left: 1.2em; }
+  .note { font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; margin-top: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- スタート -->
+  <section class="screen active card" id="screen-start">
+    <p class="label">PARTNER CHECK</p>
+    <div class="deco">🌿</div>
+    <h1>最近の彼、<br>ちょっと変わった？</h1>
+    <p class="lead">彼の様子から、男性ホルモン（テストステロン）低下のサインをチェックします。全16問・約2分。</p>
+    <button class="btn" onclick="goProfile()">はじめる</button>
+  </section>
+
+  <!-- 事前入力 -->
+  <section class="screen card" id="screen-profile">
+    <div class="field">
+      <h2>彼のおおよその年齢</h2>
+      <div class="chips" id="age-chips"></div>
+    </div>
+    <div class="field">
+      <h2>今の彼への愛情度</h2>
+      <div class="love-scale" id="love-chips"></div>
+    </div>
+    <button class="btn" id="profile-next" disabled onclick="startQuestions()">チェックへ進む</button>
+  </section>
+
+  <!-- 設問 -->
+  <section class="screen card" id="screen-question">
+    <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
+    <p class="progress-text" id="progress-text"></p>
+    <p class="q-num" id="q-num"></p>
+    <p class="q-text" id="q-text"></p>
+    <div class="answers">
+      <button class="btn" onclick="answer('ある')">ある</button>
+      <button class="btn btn-ghost" onclick="answer('ない')">ない</button>
+    </div>
+    <button class="back" id="back-btn" onclick="prevQuestion()">← 前の質問に戻る</button>
+  </section>
+
+  <!-- 結果 -->
+  <section class="screen card" id="screen-result">
+    <div class="result-icon" id="result-icon"></div>
+    <p class="result-title" id="result-title"></p>
+    <p class="result-count">「ある」の数　<b id="result-count"></b> / 16</p>
+    <div class="checked-list" id="checked-list"></div>
+    <p class="note">※テストステロンが低下している時に出現する行動傾向からの推測であり、診断ではありません。</p>
+  </section>
+
+</div>
+
+<script>
+  const QUESTIONS = [
+    'おしゃれや身だしなみに無頓着になった',
+    '家事を手伝わなくなった',
+    'そわそわして落ち着きがない',
+    'なんとなく自信がなさそう',
+    '会話が減った',
+    '朝の挨拶をしなくなった',
+    '急に怒鳴る・声を荒げることがある',
+    'ささいなことでイライラしている',
+    '夜のスキンシップが減った、もしくはなくなった',
+    'お腹まわりが目立ってきた',
+    '夜中によく起きる（眠れていない）',
+    '物事や頼み事をよく忘れる',
+    'キレやすい',
+    'お風呂に入らない',
+    '運動やトレーニングをしていない',
+    '愚痴や文句が増えた'
+  ];
+  const AGES = ['30代後半', '40代前半', '40代後半', '50代前半', '50代後半', '60代以上'];
+  const LOVES = [
+    { label: '冷めた', icon: '🧊' },
+    { label: 'やや冷めた', icon: '🌥' },
+    { label: 'ふつう', icon: '🙂' },
+    { label: '好き', icon: '😊' },
+    { label: '今も大好き', icon: '💗' }
+  ];
+
+  let age = '';
+  let love = '';
+  let current = 0;
+  const answers = [];
+
+  function show(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function goProfile() {
+    const ageBox = document.getElementById('age-chips');
+    ageBox.innerHTML = '';
+    AGES.forEach(a => {
+      const b = document.createElement('button');
+      b.className = 'chip';
+      b.textContent = a;
+      b.onclick = () => { age = a; select(ageBox, b); };
+      ageBox.appendChild(b);
+    });
+    const loveBox = document.getElementById('love-chips');
+    loveBox.innerHTML = '';
+    LOVES.forEach(l => {
+      const b = document.createElement('button');
+      b.className = 'chip';
+      b.innerHTML = '<span>' + l.icon + '</span>' + l.label;
+      b.onclick = () => { love = l.label; select(loveBox, b); };
+      loveBox.appendChild(b);
+    });
+    show('screen-profile');
+  }
+
+  function select(box, btn) {
+    box.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+    btn.classList.add('selected');
+    document.getElementById('profile-next').disabled = !(age && love);
+  }
+
+  function startQuestions() {
+    current = 0;
+    renderQuestion();
+    show('screen-question');
+  }
+
+  function renderQuestion() {
+    document.getElementById('q-num').textContent = 'Q' + (current + 1);
+    document.getElementById('q-text').textContent = QUESTIONS[current];
+    document.getElementById('progress-bar').style.width = (current / QUESTIONS.length * 100) + '%';
+    document.getElementById('progress-text').textContent = (current + 1) + ' / ' + QUESTIONS.length;
+    document.getElementById('back-btn').style.visibility = current === 0 ? 'hidden' : 'visible';
+  }
+
+  function answer(value) {
+    answers[current] = value;
+    if (current < QUESTIONS.length - 1) {
+      current++;
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function prevQuestion() {
+    if (current > 0) { current--; renderQuestion(); }
+  }
+
+  function showResult() {
+    const count = answers.filter(a => a === 'ある').length;
+    const isLow = count >= 3;
+    const result = isLow
+      ? '男性ホルモンが低下している可能性があります。'
+      : '目立ったテストステロン低下傾向は見られません。';
+
+    document.getElementById('result-icon').textContent = isLow ? '🍂' : '🌱';
+    document.getElementById('result-title').textContent = result;
+    document.getElementById('result-count').textContent = count;
+
+    const list = document.getElementById('checked-list');
+    const checked = QUESTIONS.filter((q, i) => answers[i] === 'ある');
+    if (checked.length > 0) {
+      list.innerHTML = '<p>「ある」と答えた項目</p><ul>' +
+        checked.map(q => '<li>' + q + '</li>').join('') + '</ul>';
+      list.style.display = 'block';
+    } else {
+      list.style.display = 'none';
+    }
+
+    show('screen-result');
+
+    fetch('/api/save-result', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ age: age, love: love, answers: answers })
+    }).catch(() => {});
+  }
+</script>
+</body>
+</html>
