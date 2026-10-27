@@ -134,7 +134,7 @@
     <p class="label">PARTNER CHECK</p>
     <div class="deco">🌿</div>
     <p class="start-title">あなたのパートナーの<br>男性ホルモン（テストステロン）低下のサインをチェックします。</p>
-    <p class="lead">全16問・約2分。</p>
+    <p class="lead">全<span id="total-start"></span>問・約2分。</p>
     <button class="btn" onclick="goProfile()">はじめる</button>
   </section>
 
@@ -169,7 +169,7 @@
     <div class="result-icon" id="result-icon"></div>
     <p class="result-title" id="result-title"></p>
     <p class="result-count">「ある」の数
-      <span class="count-num"><span id="result-count"></span> <small>/ 16</small></span>
+      <span class="count-num"><span id="result-count"></span> <small>/ <span id="total-result"></span></small></span>
     </p>
     <p class="note">※テストステロンが低下している時に出現する行動傾向からの推測であり、診断ではありません。</p>
     <div class="checked-list" id="checked-list"></div>
@@ -194,7 +194,8 @@
     'キレやすい',
     'お風呂に入らない',
     '運動やトレーニングをしていない',
-    '愚痴や文句が増えた'
+    '愚痴や文句が増えた',
+    'あなたを女性として意識している節がない'
   ];
   const AGES = ['30代後半', '40代前半', '40代後半', '50代前半', '50代後半', '60代以上'];
   const LOVES = [
@@ -209,6 +210,9 @@
   let love = '';
   let current = 0;
   const answers = [];
+
+  document.getElementById('total-start').textContent = QUESTIONS.length;
+  document.getElementById('total-result').textContent = QUESTIONS.length;
 
   function show(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
