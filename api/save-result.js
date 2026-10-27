@@ -1,6 +1,6 @@
 const AGES = ['30代後半', '40代前半', '40代後半', '50代前半', '50代後半', '60代以上'];
 const LOVES = ['冷めた', 'やや冷めた', 'ふつう', '好き', '今も大好き'];
-const QUESTION_COUNT = 16;
+const QUESTION_COUNT = 17;
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
